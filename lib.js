@@ -20,12 +20,14 @@ const listedPrice =
         : 0
 
 const totalPrice =
-  (listing, cart) => {
-    let prices = []
+  (listings, cart) => {
+    let total = 0
     for (let item of cart.items) {
-      prices.push(listedPrice(listing)(item))
+      for (let listing of listings) {
+        total += listedPrice(listing)(item)
+      }
     }
-    return prices.reduce((a, b) => a + b)
+    return total
   }
 /**
  * transform carts into an array of { customer, total }
@@ -33,15 +35,9 @@ const totalPrice =
 const calculateTotals =
   listings =>
     carts => {
-
-      // carts.map((cart) =>
-      //     let items = cart.map((cart) => { cart.items })
-      //     {cart.customer, total}
-      // })
-      // let customers = carts.map((cart) => { cart.customer })
-      // let items = carts.map((cart) => { cart.items })
-      // let prices = items.map((item) => { listedPrice(listings)(item) })
-      // return { customer, total: totalPrice(cart) }
+      return carts.map((cart) => {
+        return { customer: cart.customer, total: totalPrice(listings, cart) }
+      })
     }
 
 module.exports = {
